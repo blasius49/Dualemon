@@ -50,14 +50,14 @@ export default function AdminPage() {
     );
   }
 
-  if (!me || me.role !== "admin") return <AdminLogin onDone={() => window.location.reload()} />;
+  if (!me || me.role !== "admin") return <AdminLogin onDone={(user) => setMe(user)} />;
 
   return <Dashboard me={me} />;
 }
 
 /* ---------------- LOGIN ---------------- */
 
-function AdminLogin({ onDone }: { onDone: () => void }) {
+function AdminLogin({ onDone }: { onDone: (user: Me) => void }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -83,7 +83,7 @@ function AdminLogin({ onDone }: { onDone: () => void }) {
         await fetch("/api/auth/logout", { method: "POST" });
         return;
       }
-      onDone();
+      onDone(data as Me);
     } catch {
       setError("Falha de conexão.");
     } finally {
@@ -115,10 +115,7 @@ function AdminLogin({ onDone }: { onDone: () => void }) {
         >
           {busy ? "Entrando…" : "Entrar no painel"}
         </button>
-        <p className="border border-line bg-coal px-3 py-2 text-center text-[11px] text-dim">
-          Demonstração: <strong className="text-cream">admin@dualemon.com.br</strong> · senha{" "}
-          <strong className="text-cream">admin123</strong>
-        </p>
+
         <p className="text-center text-[11px] text-dim">
           <Link href="/conta" className="text-brand-gold underline-offset-2 hover:underline">
             Sou cliente → área do cliente
