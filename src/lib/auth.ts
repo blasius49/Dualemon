@@ -1,7 +1,11 @@
 import crypto from "crypto";
 import { cookies } from "next/headers";
 
-const SECRET = process.env.SESSION_SECRET || "dualemon-pomerode-dev-secret";
+function getSecret(): string {
+  const secret = process.env.SESSION_SECRET;
+  if (!secret || secret.length < 32) throw new Error("SESSION_SECRET must be at least 32 characters.");
+  return secret;
+}
 const COOKIE = "dualemon_session";
 
 export function hashPassword(password: string): string {
@@ -28,7 +32,7 @@ export type SessionPayload = {
 };
 
 function sign(payload: string): string {
-  return crypto.createHmac("sha256", SECRET).update(payload).digest("base64url");
+  return crypto.createHmac("sha256", getSecret()).update(payload).digest("base64url");
 }
 
 export async function createSession(payload: SessionPayload): Promise<void> {
