@@ -4,6 +4,11 @@ import { hashPassword } from "../lib/auth";
 import { count } from "drizzle-orm";
 
 async function main() {
+  const adminEmail = process.env.SEED_ADMIN_EMAIL;
+  const adminPassword = process.env.SEED_ADMIN_PASSWORD;
+  if (!adminEmail || !adminPassword || adminPassword.length < 12) {
+    throw new Error("Set SEED_ADMIN_EMAIL and a SEED_ADMIN_PASSWORD of 12+ characters.");
+  }
   const [userCount] = await db.select({ c: count() }).from(users);
   if (userCount.c > 0) {
     console.log("Seed já aplicado, pulando.");
@@ -13,8 +18,8 @@ async function main() {
   await db.insert(users).values([
     {
       name: "Admin Dualemon",
-      email: "admin@dualemon.com.br",
-      passwordHash: hashPassword("admin123"),
+      email: adminEmail,
+      passwordHash: hashPassword(adminPassword),
       role: "admin",
     },
   ]);
