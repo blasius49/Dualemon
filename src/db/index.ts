@@ -12,7 +12,12 @@ function getPool(): Pool {
   if (!localPool) {
     const url = process.env.DATABASE_URL;
     if (!url) throw new Error("DATABASE_URL is required at runtime; configure it in Vercel.");
-    localPool = new Pool({ connectionString: url });
+    localPool = new Pool({
+  connectionString: url,
+  max: 2,
+  idleTimeoutMillis: 10000,
+  connectionTimeoutMillis: 5000,
+});
     if (process.env.NODE_ENV !== "production") {
       globalForDb.__arenaNextJsPostgresqlPool = localPool;
     }
