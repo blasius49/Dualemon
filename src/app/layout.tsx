@@ -30,6 +30,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <main>{children}</main>
           <Footer />
         </CartProvider>
+  {children}
+  <SpeedInsights />
       </body>
     </html>
   );
