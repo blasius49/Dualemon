@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import type { ReactNode } from "react";
 import "./globals.css";
 import { CartProvider } from "@/components/CartProvider";
